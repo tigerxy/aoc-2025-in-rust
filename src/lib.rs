@@ -5,6 +5,8 @@
 
 use std::fs;
 
+pub mod grid;
+
 /// Reads an input file into a trimmed string.
 pub fn read_input(path: &str) -> String {
     fs::read_to_string(path)
