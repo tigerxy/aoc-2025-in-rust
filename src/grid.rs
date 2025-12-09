@@ -130,6 +130,31 @@ impl<T> Grid<T> {
     }
 }
 
+impl Grid<bool> {
+    pub fn prefix_sum(&self) -> Grid<u64> {
+        let w = self.width();
+        let h = self.height();
+        let mut pref = Grid::new(w + 1, h + 1, vec![0u64; (w + 1) * (h + 1)]);
+
+        self.coords().for_each(|(x, y)| {
+            let v = u64::from(self[(x, y)]);
+            pref[(x + 1, y + 1)] = v + pref[(x, y + 1)] + pref[(x + 1, y)] - pref[(x, y)];
+        });
+
+        pref
+    }
+}
+
+impl Grid<u64> {
+    #[inline]
+    pub fn rect_sum(&self, x0: usize, y0: usize, x1: usize, y1: usize) -> u64 {
+        let [a, b, c, d] =
+            [(x1 + 1, y1 + 1), (x0, y1 + 1), (x1 + 1, y0), (x0, y0)].map(|coord| self[coord]);
+
+        a + d - b - c
+    }
+}
+
 impl<T> Index<(usize, usize)> for Grid<T> {
     type Output = T;
 
